@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "263935481757",
+    "project_id": "todolist-7619b",
+    "storage_bucket": "todolist-7619b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263935481757:android:e5783b2988a868374a8174",
+        "android_client_info": {
+          "package_name": "com.senai.todolist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkfgzgsRcEMZ-21Zy3y7NhROfk-K-WYvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
