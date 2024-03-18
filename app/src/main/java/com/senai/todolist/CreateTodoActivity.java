@@ -42,8 +42,8 @@ public class CreateTodoActivity extends AppCompatActivity {
                     editTextDescription.getText().toString()
             );
 
-            Database database = new Database(this);
-            database.createTodo(todo, "Tarefa criada com sucesso");
+            FirebaseApi firebaseApi = new FirebaseApi(this);
+            firebaseApi.createTodo(todo, "Tarefa criada com sucesso");
         }
         return super.onOptionsItemSelected(item);
     }

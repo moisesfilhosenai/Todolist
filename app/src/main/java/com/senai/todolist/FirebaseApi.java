@@ -1,6 +1,8 @@
 package com.senai.todolist;
 
 import android.app.Activity;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentChange;
@@ -10,13 +12,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Database {
+public class FirebaseApi {
 
     private static final String DATABASE_NAME = "/todolist";
     private final Activity activity;
+    private ListView listViewTodo;
+    private ArrayAdapter<Todo> adapter;
+    private List<Todo> todos;
 
-    public Database(Activity activity) {
+    public FirebaseApi(Activity activity, ListView listViewTodo, ArrayAdapter<Todo> adapter) {
         this.activity = activity;
+        this.listViewTodo = listViewTodo;
+        this.adapter = adapter;
+    }
+
+    public FirebaseApi(Activity activity) {
+        this.activity = activity;
+    }
+
+    public void getAllTodos() {
+        todos = new ArrayList<>();
+
+        FirebaseFirestore.getInstance().collection(DATABASE_NAME)
+                .addSnapshotListener((value, error) -> {
+                    List<DocumentChange> documentChanges = value.getDocumentChanges();
+
+                    for (DocumentChange doc: documentChanges) {
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            String documentId = doc.getDocument().getId();
+                            Todo todo = doc.getDocument().toObject(Todo.class);
+                            todo.setId(documentId);
+                            todos.add(todo);
+                        }
+                    }
+                    adapter = new ArrayAdapter<>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, todos);
+                    listViewTodo.setAdapter(adapter);
+                });
+    }
+
+    public Todo getTodoByPosition(int position) {
+        return todos.get(position);
     }
 
     public void createTodo(Todo todo, String message) {
@@ -43,28 +78,4 @@ public class Database {
                 });
     }
 
-    private List<Todo> getAllTodos() {
-        List<Todo> todos = new ArrayList<>();
-
-        FirebaseFirestore.getInstance().collection(DATABASE_NAME)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Toast.makeText(activity.getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                    } else {
-                        if (value != null) {
-                            List<DocumentChange> documentChanges = value.getDocumentChanges();
-
-                            for (DocumentChange doc: documentChanges) {
-                                if (doc.getType() == DocumentChange.Type.ADDED) {
-                                    String documentId = doc.getDocument().getId();
-                                    Todo todo = doc.getDocument().toObject(Todo.class);
-                                    todo.setId(documentId);
-                                    todos.add(todo);
-                                }
-                            }
-                        }
-                    }
-                });
-        return todos;
-    }
 }
