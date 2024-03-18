@@ -1,16 +1,13 @@
 package com.senai.todolist;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.firebase.firestore.FirebaseFirestore;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 
 public class CreateTodoActivity extends AppCompatActivity {
@@ -44,18 +41,11 @@ public class CreateTodoActivity extends AppCompatActivity {
                     editTextTitle.getText().toString(),
                     editTextDescription.getText().toString()
             );
-            createTodo(todo);
+
+            Database database = new Database(this);
+            database.createTodo(todo, "Tarefa criada com sucesso");
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void createTodo(Todo todo) {
-        FirebaseFirestore.getInstance().collection("/todolist")
-                .add(todo)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Tarefa criada com sucesso", Toast.LENGTH_LONG).show();
-                    finish();
-                });
     }
 
 }
