@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -39,15 +38,18 @@ public class TodoAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_todo, parent, false);
-            Toast.makeText(context.getApplicationContext(), "Inflando", Toast.LENGTH_LONG).show();
         }
         Todo todo = todos.get(position);
 
         TextView todoTitle = (TextView) convertView.findViewById(R.id.textViewTodoTitle);
-        TextView todoStatus = (TextView) convertView.findViewById(R.id.textViewTodoStatus);
+
+         if (todo.getStatus() == Status.DOING) {
+            todoTitle.setTextColor(context.getColor(R.color.orange));
+        } else if (todo.getStatus() == Status.DONE) {
+             todoTitle.setTextColor(context.getColor(R.color.green));
+        }
 
         todoTitle.setText(todo.getTitle());
-        todoStatus.setText(todo.getStatus().toString());
 
         return convertView;
     }
