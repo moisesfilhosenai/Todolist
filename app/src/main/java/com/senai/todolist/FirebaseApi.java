@@ -1,8 +1,6 @@
 package com.senai.todolist;
 
 import android.app.Activity;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;

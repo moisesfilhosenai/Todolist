@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listViewTodo = findViewById(R.id.listViewTodo);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         firebaseApi = new FirebaseApi(this, listViewTodo, adapter);
         firebaseApi.getAllTodos();
         configureListClicks();
