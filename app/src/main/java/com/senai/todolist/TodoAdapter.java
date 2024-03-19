@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class TodoAdapter extends BaseAdapter {
@@ -42,6 +43,7 @@ public class TodoAdapter extends BaseAdapter {
         Todo todo = todos.get(position);
 
         TextView todoTitle = (TextView) convertView.findViewById(R.id.textViewTodoTitle);
+        TextView todoCreatedAt = (TextView) convertView.findViewById(R.id.textViewTodoCreateAt);
 
          if (todo.getStatus() == Status.DOING) {
             todoTitle.setTextColor(context.getColor(R.color.orange));
@@ -50,6 +52,11 @@ public class TodoAdapter extends BaseAdapter {
         }
 
         todoTitle.setText(todo.getTitle());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String dataFormatada = sdf.format(todo.getCreatedAt());
+
+        todoCreatedAt.setText(dataFormatada);
 
         return convertView;
     }
