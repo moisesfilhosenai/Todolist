@@ -15,7 +15,6 @@ public class Todo {
         this.title = title;
         this.description = description;
         this.createdAt = new Date();
-        this.status = Status.TODO;
     }
 
     public String getId() {
@@ -30,16 +29,32 @@ public class Todo {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreatedAt() {
         return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public Status getStatus() {
         return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

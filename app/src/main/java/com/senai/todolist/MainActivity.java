@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        
     }
 
     private void openDialog(Todo todo) {
