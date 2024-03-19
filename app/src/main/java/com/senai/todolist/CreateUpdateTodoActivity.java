@@ -18,11 +18,12 @@ import java.util.Date;
 import java.util.List;
 
 
-public class CreateTodoActivity extends AppCompatActivity {
+public class CreateUpdateTodoActivity extends AppCompatActivity {
 
     private EditText editTextTitle;
     private EditText editTextDescription;
     private Spinner spinnerOptions;
+    private String ACAO = "CRIAR";
     private Todo todo = new Todo();
 
     @Override
@@ -35,15 +36,44 @@ public class CreateTodoActivity extends AppCompatActivity {
 
         spinnerOptions = findViewById(R.id.spinnerOptions);
 
-        Toolbar toolbar = findViewById(R.id.toolbarCreate);
-        setSupportActionBar(toolbar);
+        Toolbar toolbarCreate = findViewById(R.id.toolbarCreate);
+        setSupportActionBar(toolbarCreate);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbarCreate.setNavigationIcon(R.drawable.baseline_arrow_back_24);
 
         configureSpinner();
+
+        if (getIntent().getSerializableExtra("todo") != null) {
+            Todo todoEdit = (Todo) getIntent().getSerializableExtra("todo");
+            ACAO = "ATUALIZAR";
+            todo = todoEdit;
+
+            editTextTitle.setText(todo.getTitle());
+            editTextDescription.setText(todo.getDescription());
+
+            if (todo.getStatus() == Status.TODO) {
+                spinnerOptions.setSelection(0);
+            } else if (todo.getStatus() == Status.DOING) {
+                spinnerOptions.setSelection(1);
+            } else if (todo.getStatus() == Status.DONE) {
+                spinnerOptions.setSelection(2);
+            }
+            toolbarCreate.setTitle("Atualizar Tarefa");
+        } else {
+            todo.setCreatedAt(new Date());
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create, menu);
+        getMenuInflater().inflate(R.menu.create_update, menu);
         return true;
     }
 
@@ -52,10 +82,14 @@ public class CreateTodoActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_criar) {
             todo.setTitle(editTextTitle.getText().toString().toUpperCase());
             todo.setDescription(editTextDescription.getText().toString().toUpperCase());
-            todo.setCreatedAt(new Date());
 
             FirebaseApi firebaseApi = new FirebaseApi(this);
-            firebaseApi.createTodo(todo, "Tarefa criada com sucesso");
+
+            if (ACAO.equals("CRIAR")) {
+                firebaseApi.createTodo(todo, "Tarefa criada com sucesso");
+            } else if (ACAO.equals("ATUALIZAR")) {
+                firebaseApi.updateTodo(todo, "Tarefa atualizada com sucesso");
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -82,6 +116,7 @@ public class CreateTodoActivity extends AppCompatActivity {
                 // Ação a ser realizada quando nada for selecionado
             }
         });
+
     }
 
 }

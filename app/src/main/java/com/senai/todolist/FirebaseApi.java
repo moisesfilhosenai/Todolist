@@ -1,7 +1,6 @@
 package com.senai.todolist;
 
 import android.app.Activity;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,7 +55,6 @@ public class FirebaseApi {
         FirebaseFirestore.getInstance().collection(DATABASE_NAME)
                 .add(todo)
                 .addOnSuccessListener(documentReference -> {
-
                     todo.setId(documentReference.getId());
                     updateId(todo);
 
@@ -73,6 +71,19 @@ public class FirebaseApi {
                 .document(todo.getId())
                 .set(todo)
                 .addOnSuccessListener(aVoid-> {});
+    }
+
+    public void updateTodo(Todo todo, String message) {
+        FirebaseFirestore.getInstance().collection(DATABASE_NAME)
+                .document(todo.getId())
+                .set(todo)
+                .addOnSuccessListener(aVoid-> {
+                    Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    activity.finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(activity.getApplicationContext(), "Erro ao atualizar tarefa", Toast.LENGTH_LONG).show();
+                });
     }
 
     public void removeTodo(Todo todo, String message) {

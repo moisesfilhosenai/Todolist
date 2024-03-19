@@ -1,8 +1,9 @@
 package com.senai.todolist;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Todo {
+public class Todo implements Serializable {
     private String id;
     private String title;
     private String description;
@@ -57,8 +58,4 @@ public class Todo {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return this.title + " | " + this.status;
-    }
 }

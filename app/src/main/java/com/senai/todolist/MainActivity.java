@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         listViewTodo = findViewById(R.id.listViewTodo);
-        firebaseApi = new FirebaseApi(this, listViewTodo, adapter);
-        firebaseApi.getAllTodos();
-        configureLongClick();
     }
 
     @Override
@@ -43,13 +40,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_adicionar) {
-            startActivity(new Intent(this, CreateTodoActivity.class));
+            startActivity(new Intent(this, CreateUpdateTodoActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    private void configureLongClick() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseApi = new FirebaseApi(this, listViewTodo, adapter);
+        firebaseApi.getAllTodos();
+        configureListClicks();
+    }
+
+    private void configureListClicks() {
         listViewTodo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -59,7 +63,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        
+        listViewTodo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Todo todo = firebaseApi.getTodoByPosition(position);
+                openDialogDetailsTodo(todo);
+            }
+        });
     }
 
     private void openDialog(Todo todo) {
@@ -79,6 +89,33 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void openDialogDetailsTodo(Todo todo) {
+        String title = String.format("Tarefa %s", todo.getTitle());
+        String mensagem = String.format("Detalhes \n\n%s", todo.getDescription());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(mensagem);
+
+        builder.setPositiveButton("Editar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(MainActivity.this, CreateUpdateTodoActivity.class);
+                intent.putExtra("todo", todo);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }

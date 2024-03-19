@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreateTodoActivity">
+    tools:context=".CreateUpdateTodoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarCreate"
-        android:layout_width="409dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
@@ -16,8 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Criar Tarefa"
-        app:titleTextColor="#ffffff" />
+        app:titleTextColor="#FFFFFF"
+        app:title="Criar Tarefa" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:hint="Title"
+            android:hint="Título"
             android:inputType="text" />
 
         <EditText
@@ -44,12 +44,13 @@
             android:layout_height="150dp"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:hint="Description"
+            android:hint="Descrição"
             android:inputType="textMultiLine" />
 
         <Spinner
             android:id="@+id/spinnerOptions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
