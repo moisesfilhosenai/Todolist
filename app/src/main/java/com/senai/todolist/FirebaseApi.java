@@ -17,10 +17,10 @@ public class FirebaseApi {
     private static final String DATABASE_NAME = "/todolist";
     private final Activity activity;
     private ListView listViewTodo;
-    private ArrayAdapter<Todo> adapter;
+    private TodoAdapter adapter;
     private List<Todo> todos;
 
-    public FirebaseApi(Activity activity, ListView listViewTodo, ArrayAdapter<Todo> adapter) {
+    public FirebaseApi(Activity activity, ListView listViewTodo, TodoAdapter adapter) {
         this.activity = activity;
         this.listViewTodo = listViewTodo;
         this.adapter = adapter;
@@ -39,13 +39,11 @@ public class FirebaseApi {
 
                     for (DocumentChange doc: documentChanges) {
                         if (doc.getType() == DocumentChange.Type.ADDED) {
-                            String documentId = doc.getDocument().getId();
                             Todo todo = doc.getDocument().toObject(Todo.class);
-                            todo.setId(documentId);
                             todos.add(todo);
                         }
                     }
-                    adapter = new ArrayAdapter<>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, todos);
+                    adapter = new TodoAdapter(todos, activity.getApplicationContext());
                     listViewTodo.setAdapter(adapter);
                 });
     }
@@ -58,12 +56,23 @@ public class FirebaseApi {
         FirebaseFirestore.getInstance().collection(DATABASE_NAME)
                 .add(todo)
                 .addOnSuccessListener(documentReference -> {
+
+                    todo.setId(documentReference.getId());
+                    updateId(todo);
+
                     Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     activity.finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(activity.getApplicationContext(), "Erro ao criar tarefa", Toast.LENGTH_LONG).show();
                 });
+    }
+
+    private void updateId(Todo todo) {
+        FirebaseFirestore.getInstance().collection(DATABASE_NAME)
+                .document(todo.getId())
+                .set(todo)
+                .addOnSuccessListener(aVoid-> {});
     }
 
     public void removeTodo(Todo todo, String message) {

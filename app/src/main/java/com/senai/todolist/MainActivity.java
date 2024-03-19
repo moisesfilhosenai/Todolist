@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listViewTodo;
-    private ArrayAdapter<Todo> adapter;
+    private TodoAdapter adapter;
     private FirebaseApi firebaseApi;
 
     @Override
