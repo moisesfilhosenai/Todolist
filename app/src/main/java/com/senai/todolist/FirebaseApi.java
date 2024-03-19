@@ -1,6 +1,8 @@
 package com.senai.todolist;
 
 import android.app.Activity;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,10 +19,10 @@ public class FirebaseApi {
     private static final String DATABASE_NAME = "/todolist";
     private final Activity activity;
     private ListView listViewTodo;
-    private TodoAdapter adapter;
+    private ArrayAdapter<Todo> adapter;
     private List<Todo> todos;
 
-    public FirebaseApi(Activity activity, ListView listViewTodo, TodoAdapter adapter) {
+    public FirebaseApi(Activity activity, ListView listViewTodo, ArrayAdapter<Todo> adapter) {
         this.activity = activity;
         this.listViewTodo = listViewTodo;
         this.adapter = adapter;
@@ -43,7 +45,7 @@ public class FirebaseApi {
                             todos.add(todo);
                         }
                     }
-                    adapter = new TodoAdapter(todos, activity.getApplicationContext());
+                    adapter = new ArrayAdapter<>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, todos);
                     listViewTodo.setAdapter(adapter);
                 });
     }

@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listViewTodo;
-    private TodoAdapter adapter;
+    private ArrayAdapter<Todo> adapter;
     private FirebaseApi firebaseApi;
 
     @Override
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         listViewTodo = findViewById(R.id.listViewTodo);
         firebaseApi = new FirebaseApi(this, listViewTodo, adapter);
         firebaseApi.getAllTodos();
-        configureLongClick();
+        configureListClicks();
     }
 
     @Override
@@ -50,18 +50,26 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void configureLongClick() {
+    private void configureListClicks() {
         listViewTodo.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Todo todo = firebaseApi.getTodoByPosition(position);
-                openDialog(todo);
+                openDialogRemoveTodo(todo);
                 return true;
+            }
+        });
+
+        listViewTodo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Todo todo = firebaseApi.getTodoByPosition(position);
+                openDialogDetailsTodo(todo);
             }
         });
     }
 
-    private void openDialog(Todo todo) {
+    private void openDialogRemoveTodo(Todo todo) {
         String mensagem = String.format("A tarefa %s será removida, deseja continuar ?", todo.getTitle());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -78,6 +86,24 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void openDialogDetailsTodo(Todo todo) {
+        String title = String.format("Tarefa %s", todo.getTitle());
+        String mensagem = String.format("Detalhes \n\n%s", todo.getDescription());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(mensagem);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
